@@ -143,7 +143,7 @@ def SetUserArguments():
         elif logging == 1:
             backup_log = bool(True)
 
-
+# Prints the help section
 def PrintHelp():
     print('\nBackItUp v.2.0 (Beta) by Johnny Norberg \n'
           '------------------------------\n'
@@ -163,7 +163,7 @@ def PrintHelp():
           'output\t\tEnable or disable screen output. Values 0 or 1. Ex. output=0')
     quit()
 
-
+# Formats the date
 def TimeDate():
     dateandtime = datetime.now()
     date_time = dateandtime.strftime('%Y-%m-%d %H:%M:%S')
