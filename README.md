@@ -20,4 +20,4 @@ Accepted arguments are:
 
 * **output**    Enable or disable screen output. Values 0 or 1. Ex. output=0
 
-Please give me some feedback if you find this useful. Please, report any bugs and contribute with feature requests if you have specific needs. I will review the requests and add them if I find the feature suiting for the project. The project follows the unix philosophy *Do one thing and do it well*
+Please give me some feedback if you find this useful. Please, report any bugs and contribute with feature requests if you have specific needs. I will review the requests and add them if I find the feature suiting for the project. The project follows the unix philosophy *Do one thing and do it well.*
