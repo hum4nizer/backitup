@@ -11,3 +11,4 @@ Accepted arguements are:
 * rotation  How many historical backups should be saved. Ex. rotation=7 
 * logging   Enable or disable logging to file. Values 0 or 1. Ex. logging=1
 * output    Enable or disable screen output. Values 0 or 1. Ex. output=0
+    
