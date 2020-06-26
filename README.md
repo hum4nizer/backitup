@@ -3,6 +3,8 @@ The repository of BackItUp
 
 A cross platform backup utility that reads an input file of what to include and then pack the files in a zip file and saves it to a specified location. Usage: py backitup.py (uses values set inside backitup.py). You can set all values staticly in the code of backitup.py or pass one or more values as arguments at execution time. Arguments is always prioritised.
 
+Because of its dynamic way of handeling arguments you can run it from crontab, Windows scheduler, scripts or manually. You can also setup different jobs on the same machine, separating them with unique job names and locations.
+
 Accepted arguments are:
 * **jobname**   The name of the backup instance. Ex. jobname=MyHomeDir
 
@@ -17,3 +19,5 @@ Accepted arguments are:
 * **logging**   Enable or disable logging to file. Values 0 or 1. Ex. logging=1
 
 * **output**    Enable or disable screen output. Values 0 or 1. Ex. output=0
+
+Please give me some feedback if you find this useful. And please contribute with feature requests if you have specific needs. I will review the requests and add them if I find the feature suiting for the project. The project follows the unix philosophy "Do one thing and do it well"
