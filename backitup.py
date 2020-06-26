@@ -169,7 +169,7 @@ def TimeDate():
     date_time = dateandtime.strftime('%Y-%m-%d %H:%M:%S')
     return str(date_time)
 
-
+# Function for text output to log file and terminal
 def WriteToLog(log_message):
     if backup_log == True:
         log = open(log_file, "a")
