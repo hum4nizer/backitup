@@ -1,4 +1,4 @@
-# /usr/bin/env python3
+#/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # BackItUp by Johnny Norberg (2020)
 # Version: 2.0 Beta
