@@ -1,0 +1,9 @@
+/etc/exports
+/etc/hostname
+/etc/fstab
+/etc/samba/smb.conf
+/usr/sbin/BackItUp.py
+/etc/backup_list_file
+/root/.bashrc
+/home/elite/Scripts
+/var/log/jacktheripper.log
