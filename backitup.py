@@ -179,6 +179,7 @@ def WriteToLog(log_message):
         print(log_message)
 
 
+# Write header status to terminal output and log file
 def WriteStats():
     WriteToLog('-' * 45)
     row = format('Time:', '15'), format(timestamp, '40')
