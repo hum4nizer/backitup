@@ -245,10 +245,7 @@ def AddFile(file_name):
         WriteToLog('Processing file: ' + str(file_name[:-1]))
 
 
-def BackupRotate():
-    global backup_location
-    global backup_count
-    
+def BackupRotate(backup_location, backup_count):
     filelist = []
     filelist_with_date = []
     for filename in glob.glob(os.path.join(backup_location + hostname + '_' + job_name +'*.zip')):
@@ -298,7 +295,7 @@ def main():
         WriteToLog(str(file_count) + ' files and ' + str(dir_count) + ' directories backed up')
         
         if backup_count > 0:
-            BackupRotate()
+            BackupRotate(backup_location, backup_count)
         else:
             WriteToLog('Backup rotation is disabled')
     else:
