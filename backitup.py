@@ -16,20 +16,20 @@ from datetime import datetime
 
 ## Editable variables ############################
 # Name of this backup instance
-job_name = 'Full'
+job_name = 'Selected'
 
 # Windows backup location if no input argument is given
-backup_location = '/home/humanizer/Backup/'
+backup_location = '/mnt/backup/'
 # Windows backup location if no input argument is given
 # backup_location = 'c:\\temp\\Backups\\'
 
 # Linux backup list file if no input argument is given
-list_file = '/home/humanizer/tmp/backup_list_file'
+list_file = '/etc/backup_list_file'
 # Windows backup list file if no input argument is given
 # list_file = 'c:\\temp\\backup_list_file'
 
 # Linux log file with full path
-log_file = '/home/humanizer/tmp/backitup.log'
+log_file = '/var/log/backitup.log'
 # Windows log file with full path
 # log_file = 'c:\\temp\\backitup.log'
 
@@ -291,6 +291,9 @@ def main():
         WriteStats()
         reader = list(open(list_file, encoding='utf-8'))
         for row in reader:
+            if row == '' or row == '\n':
+                continue
+
             filecheck = os.path.isfile(row[:-1])
             if filecheck == True:
                 AddFile(row)
