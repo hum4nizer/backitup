@@ -19,19 +19,19 @@ from datetime import datetime
 job_name = 'Full'
 
 # Windows backup location if no input argument is given
-# backup_location = '/opt/backup/'
+backup_location = '/home/humanizer/Backup/'
 # Windows backup location if no input argument is given
-backup_location = 'c:\\temp\\Backups\\'
+# backup_location = 'c:\\temp\\Backups\\'
 
 # Linux backup list file if no input argument is given
-# list_file = '/etc/backup_list_file'
+list_file = '/home/humanizer/tmp/backup_list_file'
 # Windows backup list file if no input argument is given
-list_file = 'c:\\temp\\backup_list_file'
+# list_file = 'c:\\temp\\backup_list_file'
 
 # Linux log file with full path
-# log_file = '/var/log/backitup.log'
+log_file = '/home/humanizer/tmp/backitup.log'
 # Windows log file with full path
-log_file = 'c:\\temp\\backitup.log'
+# log_file = 'c:\\temp\\backitup.log'
 
 # Backup rotation count. Keeps the specified amount of
 # backups. Set this option to 0 to disable rotation
@@ -219,11 +219,18 @@ def AddDirectory(file_name):
             file_name = file_name + '/'
         WriteToLog('Processing directory: ' + file_name)
         for foldername, subfolders, filenames in os.walk(file_name):
+            for directories in subfolders:
+                dir_count = dir_count + 1
+
             for filename in filenames:
                 filepath = os.path.join(foldername, filename)
-                WriteToLog(filepath)
-                backupobject.write(filepath, compress_type=zipfile.ZIP_DEFLATED)
-                file_count = file_count + 1
+                linkcheck = os.path.islink(filepath)
+                if linkcheck == False:
+                    WriteToLog(filepath)
+                    backupobject.write(filepath, compress_type=zipfile.ZIP_DEFLATED)
+                    file_count = file_count + 1
+                else:
+                    WriteToLog('Excluding link: ' + filepath)
     except os.error as err:
         WriteToLog('Directory: An error has occurred: ' + str(err) + ' ' + file_name)
     else:
