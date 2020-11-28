@@ -19,7 +19,8 @@ from datetime import datetime
 job_name = 'Selected'
 
 # Windows backup location if no input argument is given
-backup_location = '/mnt/backup/'
+# backup_location = '/mnt/backup/'
+backup_location = '/home/humanizer/backup/'
 # Windows backup location if no input argument is given
 # backup_location = 'c:\\temp\\Backups\\'
 
@@ -29,13 +30,13 @@ list_file = '/etc/backup_list_file'
 # list_file = 'c:\\temp\\backup_list_file'
 
 # Linux log file with full path
-log_file = '/var/log/backitup.log'
+log_file = '/home/humanizer/backup/log/backitup.log'
 # Windows log file with full path
 # log_file = 'c:\\temp\\backitup.log'
 
 # Backup rotation count. Keeps the specified amount of
 # backups. Set this option to 0 to disable rotation
-backup_count = 7
+backup_count = 3
 
 # True of False
 terminal_output = True
@@ -52,7 +53,7 @@ backupfile = ''
 file_count = 0
 dir_count = 0
 myname = os.path.basename(__file__)
-
+excludes = []
 # Read user argments and format variables
 def SetUserArguments():
     global backup_location
@@ -206,6 +207,16 @@ def WriteStats():
     WriteToLog('Opening: ' + list_file)
 
 
+def excludecheck(row):
+    global excludes
+
+    for item in excludes:
+        if item in row:
+            return 'NoGo'
+        else:
+            return 'Go'
+
+
 def AddDirectory(file_name):
     global dir_count
     global file_count
@@ -225,12 +236,19 @@ def AddDirectory(file_name):
             for filename in filenames:
                 filepath = os.path.join(foldername, filename)
                 linkcheck = os.path.islink(filepath)
-                if linkcheck == False:
-                    WriteToLog(filepath)
-                    backupobject.write(filepath, compress_type=zipfile.ZIP_DEFLATED)
-                    file_count = file_count + 1
+                excheck = excludecheck(filepath)
+                if excheck == 'NoGo':
+                    WriteToLog('Excluding file: ' + filepath)
+                    continue
                 else:
-                    WriteToLog('Excluding link: ' + filepath)
+                    if linkcheck == False:
+                        WriteToLog(filepath)
+                        backupobject.write(filepath, compress_type=zipfile.ZIP_DEFLATED)
+                        file_count = file_count + 1
+                    else:
+                        WriteToLog('Excluding link: ' + filepath)
+                        continue
+
     except os.error as err:
         WriteToLog('Directory: An error has occurred: ' + str(err) + ' ' + file_name)
     else:
@@ -278,6 +296,17 @@ def BackupRotate(backup_location, backup_count):
         WriteToLog('No backups to delete')
         WriteToLog('')
 
+def read_list_file(listfile):
+    global excludes
+    objects = list(open(listfile, encoding='utf-8'))
+    for item in objects:
+        if 'exclude:' in item:
+            objects.remove(item)
+            item = item.lstrip('exclude:')
+            item = item.replace('\n', '')
+            excludes.append(item)
+    return objects, excludes
+
 
 def main():
     global list_file
@@ -289,16 +318,17 @@ def main():
         backupfile = hostname + '_' + job_name + '_' + timestamp + '.zip'
         backupobject = ZipFile(backup_location + backupfile, 'w', zipfile.ZIP_DEFLATED)
         WriteStats()
-        reader = list(open(list_file, encoding='utf-8'))
+        reader, excludes = read_list_file(list_file)
         for row in reader:
             if row == '' or row == '\n':
                 continue
-
-            filecheck = os.path.isfile(row[:-1])
-            if filecheck == True:
-                AddFile(row)
+          
             else:
-                AddDirectory(row)
+                filecheck = os.path.isfile(row[:-1])
+                if filecheck == True:
+                    AddFile(row)
+                else:
+                    AddDirectory(row)
         backupobject.close()
 
         WriteToLog('-' * 45)
