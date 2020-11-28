@@ -6,4 +6,5 @@
 /etc/backup_list_file
 /root/.bashrc
 /home/elite/Scripts
+exclude:/home/elite/Scripts/temp
 /var/log/jacktheripper.log
