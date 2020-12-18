@@ -16,7 +16,7 @@ from datetime import datetime
 
 ## Editable variables ############################
 # Name of this backup instance
-job_name = 'Selected'
+job_name = 'Test'
 
 # Windows backup location if no input argument is given
 # backup_location = '/mnt/backup/'
@@ -25,7 +25,7 @@ backup_location = '/home/humanizer/backup/'
 # backup_location = 'c:\\temp\\Backups\\'
 
 # Linux backup list file if no input argument is given
-list_file = '/etc/backup_list_file'
+list_file = '/home/humanizer/backup/backup_list_file'
 # Windows backup list file if no input argument is given
 # list_file = 'c:\\temp\\backup_list_file'
 
@@ -54,6 +54,8 @@ file_count = 0
 dir_count = 0
 myname = os.path.basename(__file__)
 excludes = []
+includes = []
+
 # Read user argments and format variables
 def SetUserArguments():
     global backup_location
@@ -209,12 +211,15 @@ def WriteStats():
 
 def excludecheck(row):
     global excludes
-
+    block = 0
     for item in excludes:
         if item in row:
-            return 'NoGo'
-        else:
-            return 'Go'
+            block = 1
+                
+    if block == 1:
+        return 1
+    else:           
+        return 0    
 
 
 def AddDirectory(file_name):
@@ -237,12 +242,12 @@ def AddDirectory(file_name):
                 filepath = os.path.join(foldername, filename)
                 linkcheck = os.path.islink(filepath)
                 excheck = excludecheck(filepath)
-                if excheck == 'NoGo':
+                if excheck == 1:
                     WriteToLog('Excluding file: ' + filepath)
                     continue
                 else:
                     if linkcheck == False:
-                        WriteToLog(filepath)
+                        #WriteToLog(filepath)
                         backupobject.write(filepath, compress_type=zipfile.ZIP_DEFLATED)
                         file_count = file_count + 1
                     else:
@@ -294,18 +299,22 @@ def BackupRotate(backup_location, backup_count):
         WriteToLog('')
     else:
         WriteToLog('No backups to delete')
-        WriteToLog('')
+        WriteToLog('--------------------')
 
-def read_list_file(listfile):
+
+def read_list_file(list_file):
+    global includes
     global excludes
-    objects = list(open(listfile, encoding='utf-8'))
-    for item in objects:
-        if 'exclude:' in item:
-            objects.remove(item)
-            item = item.lstrip('exclude:')
-            item = item.replace('\n', '')
-            excludes.append(item)
-    return objects, excludes
+    thelist = list(open(list_file, encoding='utf-8'))
+
+    for row in thelist:
+        if 'exclude:' in row:
+            row = row.lstrip('exclude:')
+            row = row.replace('\n', '') 
+            excludes.append(row)
+        else:
+            includes.append(row)
+    return includes, excludes
 
 
 def main():
@@ -320,9 +329,13 @@ def main():
         WriteStats()
         reader, excludes = read_list_file(list_file)
         for row in reader:
+            testfile = os.path.exists(row.replace('\n',''))
+            print(testfile, row)            
             if row == '' or row == '\n':
                 continue
-          
+            
+            elif testfile == False:
+                WriteToLog('File: ' + row.replace('\n','') + ' does not exist')    
             else:
                 filecheck = os.path.isfile(row[:-1])
                 if filecheck == True:
