@@ -20,17 +20,17 @@ job_name = 'Test'
 
 # Windows backup location if no input argument is given
 # backup_location = '/mnt/backup/'
-backup_location = '/home/humanizer/backup/'
+backup_location = '/mnt/backup/'
 # Windows backup location if no input argument is given
 # backup_location = 'c:\\temp\\Backups\\'
 
 # Linux backup list file if no input argument is given
-list_file = '/home/humanizer/backup/backup_list_file'
+list_file = '/etc/backup_list_file'
 # Windows backup list file if no input argument is given
 # list_file = 'c:\\temp\\backup_list_file'
 
 # Linux log file with full path
-log_file = '/home/humanizer/backup/log/backitup.log'
+log_file = '/var/log/backitup.log'
 # Windows log file with full path
 # log_file = 'c:\\temp\\backitup.log'
 
