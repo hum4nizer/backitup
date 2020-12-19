@@ -36,7 +36,7 @@ log_file = '/var/log/backitup.log'
 
 # Backup rotation count. Keeps the specified amount of
 # backups. Set this option to 0 to disable rotation
-backup_count = 3
+backup_count = 5
 
 # True of False
 terminal_output = True
@@ -247,7 +247,7 @@ def AddDirectory(file_name):
                     continue
                 else:
                     if linkcheck == False:
-                        #WriteToLog(filepath)
+                        WriteToLog(filepath)
                         backupobject.write(filepath, compress_type=zipfile.ZIP_DEFLATED)
                         file_count = file_count + 1
                     else:
@@ -330,7 +330,6 @@ def main():
         reader, excludes = read_list_file(list_file)
         for row in reader:
             testfile = os.path.exists(row.replace('\n',''))
-            print(testfile, row)            
             if row == '' or row == '\n':
                 continue
             
