@@ -25,9 +25,13 @@ Accepted arguments are:
 * **output**    Enable or disable screen output. Values 0 or 1. Ex. output=0
 
 **action** is a parameter to trigger a merge, unpack or reset
+
 **action=unpack**  Unpacks all incremental files to a specified directory 
+
 **action=merge**   Merges all inceremental files to a new intital backup file
+
 **action=reset**   Resets the backup, deletes all files and creates a new initial file
+
 Example of action trigger: action=unpack unpack_loc=/tmp/my_backup
 
 It is also possible to exclude files and directories with with the exlude option. To use it start include the syntax 'exclude:' before the path in the listfile. Ex:
