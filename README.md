@@ -23,14 +23,14 @@ Accepted arguments are:
 * **logging**   Enable or disable logging to file. Values 0 or 1. Ex. logging=1
 
 * **output**    Enable or disable screen output. Values 0 or 1. Ex. output=0
-
+* **backup_type** Backup type - full or incremental are valid commands
 **action** is a parameter to trigger a merge, unpack or reset
 
-**action=unpack**  Unpacks all incremental files to a specified directory 
+* **action=unpack**  Unpacks all incremental files to a specified directory 
 
-**action=merge**   Merges all inceremental files to a new intital backup file
+* **action=merge**   Merges all inceremental files to a new intital backup file
 
-**action=reset**   Resets the backup, deletes all files and creates a new initial file
+* **action=reset**   Resets the backup, deletes all files and creates a new initial file
 
 Example of action trigger: action=unpack unpack_loc=/tmp/my_backup
 
