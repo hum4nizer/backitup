@@ -290,22 +290,23 @@ def ArchiveWorker(unpack_location, location, backupfile, state):
     filelist = []
     filelist_with_date = []
     
-    if state == 'unpack' or state == 'merge':
+    if state == 'unpack' or state == 'merge' or state == 'reset':
         if state == 'unpack':
             WriteToLog(log_file, 'Unpack command executed with destination directory ' + unpack_location)
         
         elif state == 'merge':
             WriteToLog(log_file, 'Merge command executed')
 
-        for filename in glob.glob(os.path.join(backup_location + socket.gethostname() + '_' + job_name +'*.zip')):
+        for filename in glob.glob(os.path.join(backup_location + socket.gethostname() + '_' + job_name + '*.zip')):
             filelist.append(filename)
-
+        
         for file in filelist:
                 mtime = time.strftime('%Y%m%d%H%M%S', time.gmtime(os.path.getmtime(file)))
                 filelist_with_date.append(str(mtime) + '#' + file)
                 filelist_with_date.sort(reverse=False)
         
-
+        filelist.sort()
+        
         for file in filelist:
             with zipfile.ZipFile(file) as zf:
                 if state == 'unpack':
@@ -327,17 +328,25 @@ def ArchiveWorker(unpack_location, location, backupfile, state):
         DeleteFilesAtMerge(filelist, 'after_merge')
         WriteToLog(log_file, 'Merge finished')
 
+    if state == 'reset':
+        DeleteFilesAtMerge(filelist, 'before_merge')
+        DeleteFilesAtMerge(filelist, 'after_merge')
+        WriteToLog(log_file, 'Reset command executed. Rebuildning backup')
 
 def  DeleteFilesAtMerge(filelist, state):
     if state == 'before_merge':
         for file in filelist:
             os.remove(file)
 
-        os.remove(backup_location + '.masterfile')
-        os.remove(backup_location + '.contentfile')
+        if os.path.isfile(backup_location + '.masterfile'):
+            os.remove(backup_location + '.masterfile')
+        
+        if os.path.isfile(backup_location + '.contentfile'):
+            os.remove(backup_location + '.contentfile')
 
     if state == 'after_merge':
-        shutil.rmtree(str(user_home) + '/tmp/backitup')
+        if os.path.isdir(str(user_home) + '/tmp/backitup'):
+            shutil.rmtree(str(user_home) + '/tmp/backitup')
 
 
 def CreateMergeArchive(backupfile, location):
@@ -518,6 +527,9 @@ def main():
         ArchiveWorker(unpack_location, str(user_home) + '/tmp/backitup', backupfile, 'merge')
         quit()
 
+    if action == 'reset':
+        ArchiveWorker(unpack_location, str(user_home) + '/tmp/backitup', backupfile, 'reset')
+        
     if os.path.exists(list_file):
         WriteStats(log_file, backupfile, backup_location, list_file, backup_type)
         
